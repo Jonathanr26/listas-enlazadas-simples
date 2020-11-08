@@ -8,14 +8,14 @@ var btListar = document.querySelector("#btListar");
 var btListarIn = document.querySelector("#btListarIn");
 
 //Inputs
-var codigoPro = document.querySelector("#codigoPro");
-var nombrePro = document.querySelector("#nombrePro");
-var descPro = document.querySelector("#descPro");
-var costoPro = document.querySelector("#costoPro");
-var cantPro = document.querySelector("#cantPro");
+var codigo = document.querySelector("#codigoPro");
+var nombre = document.querySelector("#nombrePro");
+var descripcion = document.querySelector("#descPro");
+var costo = document.querySelector("#costoPro");
+var cantidad = document.querySelector("#cantPro");
 var posicion = document.querySelector("#posiPro");
 var borrarPro = document.querySelector("#borrarPro");
-var buscarPor = document.querySelector("#buscarPro");
+var buscarPro = document.querySelector("#buscarPro");
 var lista = document.querySelector("#listado");
 
 class Producto{
@@ -64,26 +64,31 @@ class Inventario{
         this.listaP();
     }
 
-    posicionP(nuevo, posicion){
-        if(posicion < 0 || this.cantPro.length >= this.tamaño){
-            return null;
-        }else{
-            let aux = this.inicio;
-            let anterior;
-            if(posicion ===  0){
-                nuevo.siguiente = aux;
-                this.inicio = nuevo;
-            }else{
-                for(let i = 0; i < posicion; i++){
-                    anterior = aux;
-                    aux = aux.siguiente;
-                }
-                nuevo.siguiente = aux;
-                anterior.siguiente = nuevo;
-            }
-            this.tamaño++;
+    posicionP(nombre, posicion){
+        if(this.inicio == null){
+            return false;
         }
-        return nuevo.nuevo;
+        let aux = this.inicio;
+        while (aux != null){
+            if (nombre.codigo == aux.codigo){
+                return false;
+            }
+            aux = aux.siguiente;
+        }
+        aux = this.inicio;
+        let i = 1;
+        while(i < posicion - 1 && aux != null){
+            aux = aux.siguiente;
+            i++;
+        }
+        if(aux == null){
+            return false;
+        }
+        let temp = aux.siguiente;
+        aux.siguiente = nombre;
+        aux.siguiente.siguiente = temp;   
+        document.getElementById("form_1").reset();
+        this.listaP();
     }
 
     agregarInicio(nombre){
@@ -96,6 +101,8 @@ class Inventario{
         }
         nombre.siguiente = this.inicio
         this.inicio = nombre
+        document.getElementById("form_1").reset();
+        this.listaP();
     }
 
     borrarInicio(){
@@ -107,52 +114,43 @@ class Inventario{
         return aux;
     }
 
-    borrarP(codigo){
-        if(this.inicio == null){
-            return null
+    borrarP(idP){
+        if(idP < 0 || idP > this.tamano){
+            return false;
         }
-        else if(this.inicio.codigo == codigo){
-            return this.borrarInicio();
-        }
-        else{
-            let aux = this.inicio
-            while (aux.siguiente !== null || aux.siguiente.codigoPro !== codigo){
-                aux = aux.siguiente
+        let aux = this.inicio;
+        let anterior = null;
+
+        if(idP == 0){
+            this.head = aux.siguiente;
+        } else{
+            for(let i = 0; i < idP; i++){
+                anterior = aux;
+                aux = aux.siguiente;
             }
-            if (aux.siguiente !== null){
-                let temp = aux.siguiente;
-                aux.siguiente = temp.siguiente;
-                temp.siguiente = null;
-                document.getElementById("form_2").reset();
-                this.listaP();
-                return temp;
-            }else{
-                return null
-                
-            }
-            
+            anterior.siguiente = aux.siguiente;
         }
+        this.tamano--
+        return (this.listaP(), aux.producto);
         
     }
 
-    buscarP(codigo){
-        if(this.inicio == null){
-            return null
+    buscarP(idP){
+        if(idP < 0 || idP >= this.tamano){
+            return false;
         }
-        else if(this.inicio.codigo == codigo){
-            return this.inicio
-        }
-        else{
-            let aux = this.inicio
-            while(aux.codigo != codigo && aux.siguiente != null){
-                aux = aux.siguiente
+        let aux = this.inicio;
+        let anterior = null;
+        if(idP == 0){
+            return aux.nombre;
+        } else{
+            for(let i=0; i<idP; i++){
+                anterior = aux;
+                aux = aux.siguiente;
             }
-            if(aux.siguiente == null || aux.codigo != codigo){
-                return null
-            }
-            else{
-                return aux
-            } 
+            document.getElementById("form_2").reset();
+            this.listaP();
+            return aux.nombre;
         }
     }
 
@@ -183,19 +181,26 @@ class Inventario{
 let inventario = new Inventario();
 //Agregar
 btAgregar.addEventListener("click", () => {
-  let newProdcuto = new Producto(codigoPro.value, nombrePro.value, descPro.value, costoPro.value, cantPro.value);
-  inventario.agregarP(newProdcuto);
-  console.log(newProdcuto)
-  
+    if(posicion.value == ""){
+        let newProdcuto = new Producto(codigo.value, nombre.value, descripcion.value, costo.value, cantidad.value);
+        inventario.agregarP(newProdcuto);
+        console.log(':D', codigo.value) 
+    }else{
+        let nuevo = new Producto(codigo.value, nombre.value, descripcion.value, costo.value, cantidad.value);
+        inventario.posicionP(nuevo);
+        
+    }
 });
 
 //Agregar Inicio
 btAgregarIn.addEventListener("click", () => {
-    inventario.agregarInicio();
+    let nuevo = new Producto(codigo.value, nombre.value, descripcion.value, costo.value, cantidad.value);
+    inventario.agregarInicio(nuevo);
 })
 
 //Borrar
 btBorrar.addEventListener("click", () => {
+  console.log(borrarPro.value)
   inventario.borrarP(borrarPro.value);
   
 });
@@ -207,8 +212,7 @@ btBorrarIn.addEventListener("click", () => {
 
 //Buscar
 btBuscar.addEventListener("click", () => {
-  inventario.buscarP(buscarPor.value);
-  
+  inventario.buscarP(buscarPro.value);
 });
 
 //Lista
