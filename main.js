@@ -109,48 +109,43 @@ class Inventario{
         let aux = this.inicio;
         this.inicio = this.inicio.siguiente;
         aux.siguiente = null;
-        document.getElementById("form_2").reset();
         this.listaP();
         return aux;
     }
 
-    borrarP(idP){
-        if(idP < 0 || idP > this.tamano){
-            return false;
-        }
+    borrarP(codigo){
         let aux = this.inicio;
         let anterior = null;
 
-        if(idP == 0){
-            this.head = aux.siguiente;
-        } else{
-            for(let i = 0; i < idP; i++){
-                anterior = aux;
-                aux = aux.siguiente;
-            }
-            anterior.siguiente = aux.siguiente;
-        }
-        this.tamano--
-        return (this.listaP(), aux.producto);
-        
+        while(aux != null){
+            if(aux.codigo === codigo){
+                if(!anterior){
+                    this.inicio = aux.siguiente;
+                } else{
+                    anterior.siguiente = aux.siguiente;
+                };
+                this.tamaño--;
+                document.getElementById("form_2").reset();
+                return (this.listaP(), aux.codigo);
+            };
+            anterior = aux;
+            aux = aux.siguiente;
+        };
+        return null;    
     }
 
-    buscarP(idP){
-        if(idP < 0 || idP >= this.tamano){
-            return false;
-        }
+    buscarP(codigo){
+        if(this.inicio == null){
+            return null;
+        };
         let aux = this.inicio;
-        let anterior = null;
-
-        if(idP == 0){
-            return (this.listaP(), aux.producto);
-        } else{
-            for(let i = 0; i < idP; i++){
-                anterior = aux;
-                aux = aux.siguiente;
-            }
-            return (this.listaP(), aux.producto);
-        }
+        while(aux){
+            if(aux.codigo == codigo){
+                return (this. listaP(), aux);
+            };
+            aux = aux.siguiente;
+        };
+        return null;
     }
 
     listaP() {
@@ -183,7 +178,6 @@ btAgregar.addEventListener("click", () => {
     if(posicion.value == ""){
         let newProdcuto = new Producto(codigo.value, nombre.value, descripcion.value, costo.value, cantidad.value);
         inventario.agregarP(newProdcuto);
-        console.log(':D', codigo.value) 
     }else{
         let nuevo = new Producto(codigo.value, nombre.value, descripcion.value, costo.value, cantidad.value);
         inventario.posicionP(nuevo);
@@ -199,7 +193,6 @@ btAgregarIn.addEventListener("click", () => {
 
 //Borrar
 btBorrar.addEventListener("click", () => {
-  console.log(borrarPro.value)
   inventario.borrarP(borrarPro.value);
   
 });
