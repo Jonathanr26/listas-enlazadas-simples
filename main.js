@@ -141,16 +141,15 @@ class Inventario{
         }
         let aux = this.inicio;
         let anterior = null;
+
         if(idP == 0){
-            return aux.nombre;
+            return (this.listaP(), aux.producto);
         } else{
-            for(let i=0; i<idP; i++){
+            for(let i = 0; i < idP; i++){
                 anterior = aux;
                 aux = aux.siguiente;
             }
-            document.getElementById("form_2").reset();
-            this.listaP();
-            return aux.nombre;
+            return (this.listaP(), aux.producto);
         }
     }
 
