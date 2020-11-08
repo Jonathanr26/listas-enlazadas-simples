@@ -109,28 +109,27 @@ class Inventario{
         let aux = this.inicio;
         this.inicio = this.inicio.siguiente;
         aux.siguiente = null;
-        this.listaP();
-        return aux;
+        return (this.listaP(), aux);
     }
 
     borrarP(codigo){
         let aux = this.inicio;
-        let anterior = null;
+        let temp = null;
 
         while(aux != null){
             if(aux.codigo === codigo){
-                if(!anterior){
+                if(!temp){
                     this.inicio = aux.siguiente;
                 } else{
-                    anterior.siguiente = aux.siguiente;
-                };
+                    temp.siguiente = aux.siguiente;
+                }
                 this.tamaño--;
                 document.getElementById("form_2").reset();
                 return (this.listaP(), aux.codigo);
-            };
-            anterior = aux;
+            }
+            temp = aux;
             aux = aux.siguiente;
-        };
+        }
         return null;    
     }
 
@@ -141,11 +140,11 @@ class Inventario{
         let aux = this.inicio;
         while(aux){
             if(aux.codigo == codigo){
-                return (this. listaP(), aux);
+                return (aux);
             };
             aux = aux.siguiente;
         };
-        return null;
+        return null; 
     }
 
     listaP() {
