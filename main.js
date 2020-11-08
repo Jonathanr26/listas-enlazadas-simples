@@ -136,14 +136,14 @@ class Inventario{
     buscarP(codigo){
         if(this.inicio == null){
             return null;
-        };
+        }
         let aux = this.inicio;
         while(aux){
             if(aux.codigo == codigo){
                 return (aux);
-            };
+            }
             aux = aux.siguiente;
-        };
+        }
         return null; 
     }
 
